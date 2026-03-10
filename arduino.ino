@@ -1,5 +1,5 @@
 // My Fan code
-/*
+
 const int EnA = 7;
 const int In1 = 9;
 const int In2 = 8;
@@ -31,10 +31,9 @@ goStraight();
 delay(10);
 
 }
-*/
+
 
 //My LED code
-/*
 const int buzz = 9;
 const int led1 = 7;
 const int led2 = 5;
@@ -65,4 +64,35 @@ tone (buzz,500);
 
 	}
 }
-*/
+
+//My led sound sensor 
+const int soundPin = A0;
+const int led1 = 11;
+const int led2 = 10;
+const int led3 = 9;
+const int led4 = 8;
+const int led5 = 7;
+void setup() {
+
+
+  Serial.begin(9600);
+  pinMode(soundPin, INPUT);
+  pinMode(led1,OUTPUT);
+  pinMode(led2,OUTPUT);
+  pinMode(led3,OUTPUT);
+  pinMode(led4,OUTPUT);
+  pinMode(led5,OUTPUT);
+
+
+}
+
+void loop() { 
+  int ledMove[] = {LOW, LOW, LOW, LOW, LOW};
+  int whichLed = map(analogRead(soundPin), 0, 500, 0, 5);
+
+  for (int i = 0; i <= whichLed; i++){
+    ledMove[i] = HIGH;
+  }
+  
+  delay(100);
+  }
