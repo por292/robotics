@@ -1,4 +1,9 @@
 // full code for boardgame
+#include <LiquidCrystal_I2C.h>
+#include<wire.h>
+
+LiquidCrystal_I2C lcd1(0x27, 16, 2);
+LiquidCrystal_I2C lcd2(0x26, 16, 2);
 
 int ledPin =(13); 
 int trigPin = (9); 
@@ -6,10 +11,14 @@ int echoPin = (10);
 int duration, distance;
 void setup()
 {
-pinMode (ledPin, OUTPUT); 
-pinMode (trigPin, OUTPUT);
-pinMode (echoPin, INPUT);
-Serial.begin(9600); 
+	lcd1.init();
+	lcd1.backlight();
+	lcd2.init();
+	lcd2.backlight()
+	pinMode (ledPin, OUTPUT); 
+	pinMode (trigPin, OUTPUT);
+	pinMode (echoPin, INPUT);
+	Serial.begin(9600); 
 }
 void loop()
 
