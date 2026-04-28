@@ -5,7 +5,7 @@
 LiquidCrystal_I2C lcd1(0x27, 16, 2);
 LiquidCrystal_I2C lcd2(0x26, 16, 2);
 
-int ledPin =(13); 
+ 
 int trigPin = (9); 
 int echoPin = (10);
 int duration, distance;
