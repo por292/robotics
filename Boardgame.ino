@@ -1,29 +1,56 @@
 // full code for boardgame
 #include <LiquidCrystal_I2C.h>
-#include<wire.h>
+#include <Wire.h>
+LiquidCrystal_I2C lcd1(0x26,16,2);
+LiquidCrystal_I2C lcd2(0x27,16,2);
 
-LiquidCrystal_I2C lcd1(0x27, 16, 2);
-LiquidCrystal_I2C lcd2(0x26, 16, 2);
 
- 
-int trigPin = (9); 
-int echoPin = (10);
+const int btnPin = (13);  
+bool last_btn_state = LOW; 
+bool btn_state = LOW; 
+unsigned long btn_deb = 100; 
+unsigned long last_btn_deb = 0; 
+bool btn_toggle = false; 
+const int echoPin = (10);
+const int trigPin = (9); 
+const int ClkPin = (7);
+const int CsPin = (6);
+const int DinPin = (5);
 int duration, distance;
+
+
 void setup()
 {
-	lcd1.init();
-	lcd1.backlight();
-	lcd2.init();
-	lcd2.backlight()
-	pinMode (ledPin, OUTPUT); 
-	pinMode (trigPin, OUTPUT);
-	pinMode (echoPin, INPUT);
-	Serial.begin(9600); 
+lcd1.init();
+lcd1.backlight();
+lcd2.init();
+lcd2.backlight(); 
+pinMode(btnPin, INPUT_PULLUP);
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+Serial.begin(9600); 
 }
 void loop()
 
 {
-  long duration, cm;
+  btn_press();
+  if (btn_toggle == true) {
+    lcd1.noBacklight();
+    lcd2.noBacklight();
+    Serial.println("off");
+  }
+  else if (btn_toggle == false) {
+    lcd1.backlight();
+    lcd2.backlight();
+    Serial.println("on");
+  }
+  
+  lcd1.setCursor(0,0);
+  lcd1.print("Ready to play P1");
+  lcd2.setCursor(0,0);
+  lcd2.print("Ready to play P2");
+  
+  /*long duration, cm;
    
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -41,17 +68,28 @@ void loop()
 
 long microsecondsToCentimetres(long microseconds)
 {
-  return microseconds / 29 / 2;
+  return microseconds / 29 / 2;*/
 }
 
-// Two LCD screens
+void btn_press() {
+  if (millis() - last_btn_deb >= btn_deb) 
+  {
+    btn_state = digitalRead(btnPin); 
+    
+    if (btn_state != last_btn_state)
+    {
+      last_btn_deb = millis();
+      last_btn_state = btn_state; 
+      
+      if (btn_state == HIGH) 
+      {
+        btn_toggle = !btn_toggle; 
+      }
+    }
+  }
+}
 
-#include <LiquidCrystal_I2C.h>
-#include<wire.h>
-
-LiquidCrystal_I2C lcd1(0x27, 16, 2);
-LiquidCrystal_I2C lcd2(0x26, 16, 2);
-
+//LCD Saanner for its adress
 void setup() {
   lcd1.init();
   lcd1.backlight();
@@ -60,7 +98,7 @@ void setup() {
 
 }
 
-//LCD Saanner for its adress
+
 
 void loop() {
  delay(1);
