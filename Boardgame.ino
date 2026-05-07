@@ -33,24 +33,12 @@ Serial.begin(9600);
 void loop()
 
 {
-  btn_press();
-  if (btn_toggle == true) {
-    lcd1.noBacklight();
-    lcd2.noBacklight();
-    Serial.println("off");
-  }
-  else if (btn_toggle == false) {
-    lcd1.backlight();
-    lcd2.backlight();
-    Serial.println("on");
-  }
-  
   lcd1.setCursor(0,0);
   lcd1.print("Ready to play P1");
   lcd2.setCursor(0,0);
   lcd2.print("Ready to play P2");
   
-  /*long duration, cm;
+  long duration, cm;
    
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -64,30 +52,49 @@ void loop()
   Serial.print("cm");
   Serial.println();  
   delay(100);
+  
 }
-
 long microsecondsToCentimetres(long microseconds)
 {
-  return microseconds / 29 / 2;*/
+  return microseconds / 29 / 2;
 }
 
+
+
 void btn_press() {
-  if (millis() - last_btn_deb >= btn_deb) 
+  if (millis() - last_btn_deb >= btn_deb) // wait for debounce time
   {
-    btn_state = digitalRead(btnPin); 
-    
-    if (btn_state != last_btn_state)
+    btn_state = digitalRead(btnPin); // read btn state
+    if (btn_state != last_btn_state) // check btn state
     {
-      last_btn_deb = millis();
+      last_btn_deb = millis(); 
       last_btn_state = btn_state; 
-      
-      if (btn_state == HIGH) 
+      if (btn_state == HIGH)
       {
         btn_toggle = !btn_toggle; 
       }
     }
   }
 }
+void Off()
+{
+  
+  if (btn_press == btn_toggle == true) {
+    lcd1.noBacklight();
+    lcd2.noBacklight();
+    Serial.println("off");
+  }
+}
+void On()
+{
+  
+  if (btn_press == btn_toggle == false) {
+    lcd1.backlight();
+    lcd2.backlight();
+    Serial.println("on");
+  }  
+}
+
 
 //LCD Saanner for its adress
 void setup() {
