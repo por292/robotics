@@ -1,6 +1,8 @@
 // full code for boardgame
 #include <LiquidCrystal_I2C.h>
+#include <ADCTouchSensor.h>
 #include <Wire.h>
+#define TSPIN 5
 LiquidCrystal_I2C lcd1(0x26,16,2);
 LiquidCrystal_I2C lcd2(0x27,16,2);
 
@@ -14,21 +16,20 @@ bool btn_toggle = false;
 const int echoPin = (10);
 const int trigPin = (9); 
 bool sensorEnable = false; 
-const int ClkPin = (7);
-const int CsPin = (6);
-const int DinPin = (5);
+const int TSPin = (5);
 int duration, distance;
 
 
 void setup()
 {
-lcd1.init();
+lcd1.begin();
 lcd1.backlight();
-lcd2.init();
+lcd2.begin();
 lcd2.backlight(); 
 pinMode(btnPin, INPUT_PULLUP);
 pinMode(trigPin, OUTPUT);
 pinMode(echoPin, INPUT);
+pinMode(TSPin, INPUT);
 Serial.begin(9600); 
 }
 void loop()
@@ -90,28 +91,18 @@ void On()
     lcd2.print("Ready to play P2");
     lcd2.setCursor(0,1);
     lcd2.print("TouchSensorStart");
-   /* long duration, cm;
-   
-    digitalWrite(trigPin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trigPin, HIGH);
-    delayMicroseconds(5);
-    digitalWrite(trigPin, LOW);
-    duration = pulseIn(echoPin, HIGH);
-    cm = microsecondsToCentimetres(duration);
-    
-    Serial.print(cm);
-    Serial.print("cm");
-    Serial.println();  
-    delay(100);*/
-    digitalWrite(trigPin, LOW);
+    int state = digitalRead(TSPin);
+    Serial.println(state);
+
+
+    /*digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
     digitalWrite(trigPin, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigPin, LOW);
     long duration = pulseIn(echoPin, HIGH);
     int distance = duration * 0.034 / 2;
-    Serial.println(distance);
+    Serial.println(distance);*/
   }
 }
 
