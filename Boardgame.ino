@@ -34,22 +34,6 @@ Serial.begin(9600);
 void loop()
 
 {
-  
-  
-  long duration, cm;
-   
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(5);
-  digitalWrite(trigPin, LOW);
-	duration = pulseIn(echoPin, HIGH);
-  cm = microsecondsToCentimetres(duration);
-  
-  Serial.print(cm);
-  Serial.print("cm");
-  Serial.println();  
-  delay(100);
   btn_press();
   Off();
   On();
@@ -80,9 +64,15 @@ void Off()
 {
   btn_press();
   if (btn_toggle == true) {
+    lcd1.clear();
+    lcd2.clear();
     lcd1.noBacklight();
     lcd2.noBacklight();  
    digitalWrite(trigPin, LOW); 
+    lcd1.setCursor(0,0);
+    lcd1.print("");
+    lcd2.setCursor(0,0);
+    lcd2.print("");
   }
   delay(100);
 }
@@ -94,8 +84,26 @@ void On()
     lcd2.backlight();  
     lcd1.setCursor(0,0);
     lcd1.print("Ready to play P1");
+    lcd1.setCursor(0,1);
+    lcd1.print("TouchSensorStart");
     lcd2.setCursor(0,0);
     lcd2.print("Ready to play P2");
+    lcd2.setCursor(0,1);
+    lcd2.print("TouchSensorStart");
+   /* long duration, cm;
+   
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(5);
+    digitalWrite(trigPin, LOW);
+    duration = pulseIn(echoPin, HIGH);
+    cm = microsecondsToCentimetres(duration);
+    
+    Serial.print(cm);
+    Serial.print("cm");
+    Serial.println();  
+    delay(100);*/
     digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
     digitalWrite(trigPin, HIGH);
@@ -106,7 +114,6 @@ void On()
     Serial.println(distance);
   }
 }
-
 
 
 //LCD Saanner for its adress
