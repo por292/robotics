@@ -13,6 +13,7 @@ unsigned long last_btn_deb = 0;
 bool btn_toggle = false; 
 const int echoPin = (10);
 const int trigPin = (9); 
+bool sensorEnable = false; 
 const int ClkPin = (7);
 const int CsPin = (6);
 const int DinPin = (5);
@@ -33,10 +34,7 @@ Serial.begin(9600);
 void loop()
 
 {
-  lcd1.setCursor(0,0);
-  lcd1.print("Ready to play P1");
-  lcd2.setCursor(0,0);
-  lcd2.print("Ready to play P2");
+  
   
   long duration, cm;
    
@@ -52,7 +50,9 @@ void loop()
   Serial.print("cm");
   Serial.println();  
   delay(100);
-  
+  btn_press();
+  Off();
+  On();
 }
 long microsecondsToCentimetres(long microseconds)
 {
@@ -78,42 +78,38 @@ void btn_press() {
 }
 void Off()
 {
-  
-  if (btn_press == btn_toggle == true) {
+  btn_press();
+  if (btn_toggle == true) {
     lcd1.noBacklight();
-    lcd2.noBacklight();
-    Serial.println("off");
+    lcd2.noBacklight();  
+   digitalWrite(trigPin, LOW); 
   }
+  delay(100);
 }
 void On()
 {
-  
-  if (btn_press == btn_toggle == false) {
+  btn_press();
+  if (btn_toggle == false) {
     lcd1.backlight();
-    lcd2.backlight();
-    Serial.println("on");
-  }  
+    lcd2.backlight();  
+    lcd1.setCursor(0,0);
+    lcd1.print("Ready to play P1");
+    lcd2.setCursor(0,0);
+    lcd2.print("Ready to play P2");
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    long duration = pulseIn(echoPin, HIGH);
+    int distance = duration * 0.034 / 2;
+    Serial.println(distance);
+  }
 }
+
 
 
 //LCD Saanner for its adress
-void setup() {
-  lcd1.init();
-  lcd1.backlight();
-  lcd2.init();
-  lcd2.backlight();
-
-}
-
-
-
-void loop() {
- delay(1);
- lcd1.setCursor(0, 0);
- lcd1.print("Hello World!");
- lcd2.setCursor(0, 0);
- lcd2.print("Goodbye World!");
-
 }
 
 #include <Wire.h>
