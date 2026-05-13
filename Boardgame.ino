@@ -1,98 +1,101 @@
 // full code for boardgame
 #include <LiquidCrystal_I2C.h>
-#include <ADCTouchSensor.h>
 #include <Wire.h>
-#define TSPIN 5
-LiquidCrystal_I2C lcd1(0x26,16,2);
-LiquidCrystal_I2C lcd2(0x27,16,2);
+
+LiquidCrystal_I2C lcd1(0x26, 16, 2);
+LiquidCrystal_I2C lcd2(0x27, 16, 2);
 
 
-const int btnPin = (13);  
-bool last_btn_state = LOW; 
-bool btn_state = LOW; 
-unsigned long btn_deb = 100; 
-unsigned long last_btn_deb = 0; 
-bool btn_toggle = false; 
+const int btnPin = (13);
+bool last_btn_state = LOW;
+bool btn_state = LOW;
+unsigned long btn_deb = 100;
+unsigned long last_btn_deb = 0;
+bool btn_toggle = false;
 const int echoPin = (10);
-const int trigPin = (9); 
-bool sensorEnable = false; 
+const int trigPin = (9);
+bool sensorEnable = false;
 const int TSPin = (5);
+const int TSPin1 = (7);
 int duration, distance;
 
 
-void setup()
-{
-lcd1.begin();
-lcd1.backlight();
-lcd2.begin();
-lcd2.backlight(); 
-pinMode(btnPin, INPUT_PULLUP);
-pinMode(trigPin, OUTPUT);
-pinMode(echoPin, INPUT);
-pinMode(TSPin, INPUT);
-Serial.begin(9600); 
+void setup() {
+  lcd1.init();
+  lcd1.backlight();
+  lcd2.init();
+  lcd2.backlight();
+  pinMode(btnPin, INPUT_PULLUP);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(TSPin, INPUT);
+  pinMode(TSPin1, INPUT);
+  Serial.begin(9600);
 }
 void loop()
 
 {
+  P1();
+  P2();
   btn_press();
   Off();
   On();
 }
-long microsecondsToCentimetres(long microseconds)
-{
+long microsecondsToCentimetres(long microseconds) {
   return microseconds / 29 / 2;
 }
 
 
 
 void btn_press() {
-  if (millis() - last_btn_deb >= btn_deb) // wait for debounce time
+  if (millis() - last_btn_deb >= btn_deb)  
   {
-    btn_state = digitalRead(btnPin); // read btn state
-    if (btn_state != last_btn_state) // check btn state
+    btn_state = digitalRead(btnPin);  
+    if (btn_state != last_btn_state)  
     {
-      last_btn_deb = millis(); 
-      last_btn_state = btn_state; 
-      if (btn_state == HIGH)
-      {
-        btn_toggle = !btn_toggle; 
+      last_btn_deb = millis();
+      last_btn_state = btn_state;
+      if (btn_state == HIGH) {
+        btn_toggle = !btn_toggle;
       }
     }
   }
 }
-void Off()
-{
+void Off() {
   btn_press();
   if (btn_toggle == true) {
     lcd1.clear();
     lcd2.clear();
     lcd1.noBacklight();
-    lcd2.noBacklight();  
-   digitalWrite(trigPin, LOW); 
-    lcd1.setCursor(0,0);
+    lcd2.noBacklight();
+    digitalWrite(trigPin, LOW);
+    lcd1.setCursor(0, 0);
     lcd1.print("");
-    lcd2.setCursor(0,0);
+    lcd2.setCursor(0, 0);
     lcd2.print("");
   }
   delay(100);
 }
-void On()
-{
+void On() {
   btn_press();
   if (btn_toggle == false) {
     lcd1.backlight();
-    lcd2.backlight();  
-    lcd1.setCursor(0,0);
+    lcd2.backlight();
+    lcd1.setCursor(0, 0);
     lcd1.print("Ready to play P1");
-    lcd1.setCursor(0,1);
+    lcd1.setCursor(0, 1);
     lcd1.print("TouchSensorStart");
-    lcd2.setCursor(0,0);
+    lcd2.setCursor(0, 0);
     lcd2.print("Ready to play P2");
-    lcd2.setCursor(0,1);
+    lcd2.setCursor(0, 1);
     lcd2.print("TouchSensorStart");
     int state = digitalRead(TSPin);
     Serial.println(state);
+
+    int touch = digitalRead(TSPin);
+    Serial.println(touch);
+    int touch1 = digitalRead(TSPin1);
+    Serial.println(touch1);
 
 
     /*digitalWrite(trigPin, LOW);
@@ -104,6 +107,14 @@ void On()
     int distance = duration * 0.034 / 2;
     Serial.println(distance);*/
   }
+}
+void P1()
+{
+  
+}
+void P2()
+{
+
 }
 
 
