@@ -97,6 +97,19 @@ void On() {
     int touch1 = digitalRead(TSPin1);
     Serial.println(touch1);
 
+    if (digitalRead(TSPin) == HIGH)
+    {
+     lcd1.clear();
+     lcd1.print("P1 turn");
+     
+    }
+    else if( digitalRead(TSPin) == LOW)
+    {
+      lcd2.clear();
+      lcd2.print("P2 turn");
+      
+    }
+
 
     /*digitalWrite(trigPin, LOW);
     delayMicroseconds(2);
