@@ -12,11 +12,21 @@ bool btn_state = LOW;
 unsigned long btn_deb = 100;
 unsigned long last_btn_deb = 0;
 bool btn_toggle = false;
+
+
 const int echoPin = (10);
 const int trigPin = (9);
 bool sensorEnable = false;
+
+
 const int TSPin = (5);
-int TS_state = LOW;
+bool TS_state = LOW;
+bool last_TS_state = LOW;
+unsigned long hold = 100;
+unsigned long last_hold = 0;
+bool hold_toggle = false;
+
+int TS_state1 = LOW;
 const int TSPin1 = (7);
 int duration, distance;
 
@@ -48,14 +58,6 @@ long microsecondsToCentimetres(long microseconds) {
   return microseconds / 29 / 2;
 }
 
-void TS_function()
-{
-  if (digitalRead(TSPin) == HIGH){
-    TS_state = !TS_state;
-    digitalWrite(TSPin, TS_state);
-  }
-  
-}
 
 void btn_press() {
   if (millis() - last_btn_deb >= btn_deb)  
@@ -72,6 +74,7 @@ void btn_press() {
   }
 }
 void Off() {
+
   btn_press();
   if (btn_toggle == true) {
     lcd1.clear();
@@ -87,6 +90,8 @@ void Off() {
   delay(100);
 }
 void On() {
+  P1();
+  P2();
   btn_press();
   if (btn_toggle == false) {
     lcd1.backlight();
@@ -107,7 +112,9 @@ void On() {
     int touch1 = digitalRead(TSPin1);
     Serial.println(touch1);
 
-    if (digitalRead(TSPin) == HIGH)
+ 
+
+   /* if (digitalRead(TSPin) == HIGH)
     {
      lcd1.clear();
      lcd1.print("P1 turn");
@@ -116,9 +123,19 @@ void On() {
     else if( digitalRead(TSPin) == LOW)
     {
       lcd2.clear();
-      lcd2.print("P2 turn");
-      
+      lcd2.print("");
     }
+    if (digitalRead(TSPin1) == HIGH)
+    {
+     lcd2.clear();
+     lcd2.print("P2 turn");
+     
+    }
+    else if( digitalRead(TSPin1) == LOW)
+    {
+      lcd1.clear();
+      lcd1.print("P2 turn");
+    }*/
 
 
     /*digitalWrite(trigPin, LOW);
@@ -133,11 +150,26 @@ void On() {
 }
 void P1()
 {
-  
+ if (millis() - last_hold >= hold)  
+  {
+    TS_state = digitalRead(TSPin);  
+    if (TS_state != last_TS_state)  
+    {
+      last_hold = millis();
+      last_TS_state = TS_state;
+      if (TS_state == HIGH) {
+        hold_toggle = !hold_toggle;
+        lcd1.clear();
+        lcd1.println("P1 turn");
+        //delay(1000);
+      }
+    }
+  }
+   
 }
 void P2()
 {
-
+  
 }
 
 
