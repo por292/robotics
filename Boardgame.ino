@@ -16,14 +16,17 @@ const int echoPin = (10);
 const int trigPin = (9);
 bool sensorEnable = false;
 const int TSPin = (5);
+int TS_state = LOW;
 const int TSPin1 = (7);
 int duration, distance;
 
 
 void setup() {
-  lcd1.init();
+ // lcd1.init();
+  lcd1.begin();
   lcd1.backlight();
-  lcd2.init();
+ // lcd2.init();
+  lcd2.begin();
   lcd2.backlight();
   pinMode(btnPin, INPUT_PULLUP);
   pinMode(trigPin, OUTPUT);
@@ -45,7 +48,14 @@ long microsecondsToCentimetres(long microseconds) {
   return microseconds / 29 / 2;
 }
 
-
+void TS_function()
+{
+  if (digitalRead(TSPin) == HIGH){
+    TS_state = !TS_state;
+    digitalWrite(TSPin, TS_state);
+  }
+  
+}
 
 void btn_press() {
   if (millis() - last_btn_deb >= btn_deb)  
