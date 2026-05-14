@@ -30,6 +30,10 @@ int TS_state1 = LOW;
 const int TSPin1 = (7);
 int duration, distance;
 
+int lastRead = LOW;
+const unsigned long debounceDelay = 50;
+unsigned long lastDebounceTime = 0;
+
 
 void setup() {
  // lcd1.init();
@@ -49,7 +53,7 @@ void loop()
 
 {
   P1();
-  P2();
+  //P2();
   btn_press();
   Off();
   On();
@@ -90,8 +94,8 @@ void Off() {
   delay(100);
 }
 void On() {
-  P1();
-  P2();
+  //P1();
+  //P2();
   btn_press();
   if (btn_toggle == false) {
     lcd1.backlight();
@@ -104,8 +108,6 @@ void On() {
     lcd2.print("Ready to play P2");
     lcd2.setCursor(0, 1);
     lcd2.print("TouchSensorStart");
-    int state = digitalRead(TSPin);
-    Serial.println(state);
 
     int touch = digitalRead(TSPin);
     Serial.println(touch);
@@ -147,10 +149,31 @@ void On() {
     int distance = duration * 0.034 / 2;
     Serial.println(distance);*/
   }
+  if (hold_toggle == false){
+      P1();
+      delay(1000);
+  }
 }
 void P1()
 {
- if (millis() - last_hold >= hold)  
+  int reading = digitalRead(TSPin);
+  if (reading != lastRead) {
+    lastDebounceTime = millis();
+  }
+   if ((millis() - lastDebounceTime) > debounceDelay) {
+    // stable state detected
+    static int stableState = LOW;
+    if (reading != stableState) {
+      stableState = reading;
+      // toggle on rising edge (LOW->HIGH). If your module is active LOW, change to falling edge.
+      if (stableState == HIGH) {
+        TS_state = !TS_state;
+        digitalWrite(TSPin, TS_state ? HIGH : LOW);
+        Serial.println(TS_state ? "ON" : " OFF");
+      }
+    }
+   }
+ /*if (millis() - last_hold >= hold)  
   {
     TS_state = digitalRead(TSPin);  
     if (TS_state != last_TS_state)  
@@ -161,11 +184,10 @@ void P1()
         hold_toggle = !hold_toggle;
         lcd1.clear();
         lcd1.println("P1 turn");
-        //delay(1000);
+        delay(1000);
       }
-    }
-  }
-   
+    }*/
+  //}
 }
 void P2()
 {
